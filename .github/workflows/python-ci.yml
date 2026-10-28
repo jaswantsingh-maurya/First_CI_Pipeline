@@ -1,0 +1,33 @@
+﻿# Display name in the GitHub Actions tab.
+name: Python CI
+
+# Test pushes to main and pull requests targeting main.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    # Each run uses a fresh Ubuntu machine.
+    runs-on: ubuntu-latest
+    steps:
+      # Download repository code and tests.
+      - name: Check out code
+        uses: actions/checkout@v6
+      # Install the assignment's Python version.
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      # Install pytest using the same dependency file as local development.
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      # Verbose results show each test; any failure fails the job.
+      - name: Run tests
+        run: python -m pytest -v
